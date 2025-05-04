@@ -4,7 +4,7 @@ import HeroBlogPreview from "./components/HeroBlogPreview";
 export default function Home() {
   return (
     <main>
-      <Hero />
+      {/* <Hero /> */}
       <HeroBlogPreview />
     </main>
   );
