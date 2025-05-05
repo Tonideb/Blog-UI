@@ -87,6 +87,7 @@ export default function HeroBlogPreview() {
               }}
             >
               <HeroBlogCard 
+              id={post.id}
                 title={post.title}
                 author={post.author}
                 category={post.category}

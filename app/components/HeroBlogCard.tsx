@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 type HeroBlogCardProps = {
+  id: number;
   title: string;
   category: string;
   date: string;
@@ -10,6 +11,7 @@ type HeroBlogCardProps = {
 };
 
 export default function HeroBlogCard({ 
+  id,
   title, 
   category, 
   date, 
@@ -19,7 +21,7 @@ export default function HeroBlogCard({
 }: HeroBlogCardProps) {
   return (
     <div className="h-full min-h-[460px] sm:min-h-[500px] md:min-h-[640px] lg:min-h-[700px]">
-      <Link href={`/blog-post/${title.toLowerCase().replace(/\s+/g, '-')}`}>
+      <Link href={`/blog-post/${id}`}>
         <article 
           className="relative rounded-xl px-6 py-8 h-full flex flex-col text-black"
           style={{ 
