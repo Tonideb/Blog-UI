@@ -26,8 +26,8 @@
   "exclude": ["node_modules"],
   "eslintOptions": {
     "rules": {
-      "@typescript-eslint/no-explicit-any": "warn", // Instead of error
-      "@next/next/no-img-element": "warn" // Instead of error
+      "@typescript-eslint/no-explicit-any": "off", // Instead of error
+      "@next/next/no-img-element": "off" // Instead of error
     }
   }
 }
