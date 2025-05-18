@@ -26,14 +26,17 @@ export default function HeroBlogPreview() {
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        const response = await fetch('https://expressjs-prisma-production-c3ba.up.railway.app/posts');
+        const response = await fetch(
+          "https://expressjs-prisma-production-c3ba.up.railway.app/posts"
+        );
         if (!response.ok) {
-          throw new Error('Failed to fetch posts');
+          throw new Error("Failed to fetch posts");
         }
         const data = await response.json();
-        setPosts(data);
+        const sortedData = data.sort((a, b) => a.id - b.id);
+        setPosts(sortedData);
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'Unknown error occurred');
+        setError(err instanceof Error ? err.message : "Unknown error occurred");
       } finally {
         setLoading(false);
       }
@@ -86,14 +89,13 @@ export default function HeroBlogPreview() {
                 },
               }}
             >
-              <HeroBlogCard 
-              id={post.id}
+              <HeroBlogCard
+                id={post.id}
                 title={post.title}
                 author={post.author}
                 category={post.category}
                 date={new Date(post.createdAt).toLocaleDateString()}
                 cardColor={post.cardColor}
-              
               />
             </motion.div>
           ))}

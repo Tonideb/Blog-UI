@@ -1,14 +1,22 @@
 "use client";
 
 import Link from "next/link";
-import React from 'react';
+import React from "react";
 import { ChevronLeft } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
-import Image from 'next/image';
+import Image from "next/image";
 
 interface ContentBlock {
-  type: 'heading' | 'paragraph' | 'image';
+  type:
+    | "heading"
+    | "paragraph"
+    | "image"
+    | "quote"
+    | "numberedListItem"
+    | "bulletListItem"
+    | "checkListItem"
+    | "video";
   props: {
     level?: number;
     url?: string;
@@ -34,8 +42,6 @@ export default function BlogPost() {
   const [post, setPost] = useState<BlogPost | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-
-  
 
   useEffect(() => {
     const fetchPost = async () => {
@@ -94,25 +100,42 @@ export default function BlogPost() {
       switch (block.type) {
         case "heading":
           const level = Math.min(Math.max(block.props.level || 2, 1), 6);
-          // const HeadingTag = `h${level}` as keyof JSX.IntrinsicElements;
+          const headingClasses = {
+            1: "text-4xl font-bold mt-12 mb-6",
+            2: "text-3xl font-bold mt-10 mb-5",
+            3: "text-2xl font-semibold mt-8 mb-4",
+            4: "text-xl font-semibold mt-6 mb-3",
+            5: "text-lg font-medium mt-4 mb-2",
+            6: "text-base font-medium mt-3 mb-1",
+          }[level];
+
           return React.createElement(
             `h${level}`,
-            { key: index, className: "mt-6 mb-4" },
+            { key: index, className: headingClasses },
             block.content?.[0]?.text
           );
-          
+
         case "paragraph":
+          // Skip rendering if there's no content
+          if (
+            !block.content ||
+            block.content.length === 0 ||
+            !block.content[0]?.text
+          ) {
+            return <br key={index} className="my-2" />;
+          }
           return (
-            <p key={index} className="mb-4">
-              {block.content?.[0]?.text}
+            <p key={index} className="mb-4 text-gray-700 leading-relaxed">
+              {block.content[0].text}
             </p>
           );
+
         case "image":
           return (
             <div key={index} className="my-6">
               <Image
-                src={block.props.url || ''}
-                alt={block.props.caption || ''}
+                src={block.props.url || ""}
+                alt={block.props.caption || ""}
                 width={800}
                 height={450}
                 className="w-full max-h-96 object-contain rounded"
@@ -124,6 +147,66 @@ export default function BlogPost() {
               )}
             </div>
           );
+
+        case "quote":
+          return (
+            <blockquote
+              key={index}
+              className="border-l-4 border-emerald-500 pl-4 italic my-6 text-gray-600"
+            >
+              {block.content?.[0]?.text}
+            </blockquote>
+          );
+
+        case "numberedListItem":
+          return (
+            <ol key={index} className="list-decimal list-inside my-2 pl-4">
+              <li className="text-gray-700">{block.content?.[0]?.text}</li>
+            </ol>
+          );
+
+        case "bulletListItem":
+          return (
+            <ul key={index} className="list-disc list-inside my-2 pl-4">
+              <li className="text-gray-700">{block.content?.[0]?.text}</li>
+            </ul>
+          );
+
+        case "checkListItem":
+          return (
+            <div key={index} className="flex items-center my-2">
+              <input
+                type="checkbox"
+                checked={block.props.checked || false}
+                readOnly
+                className="mr-2 h-4 w-4 rounded border-gray-300 text-emerald-600 focus:ring-emerald-500"
+              />
+              <span
+                className={`text-gray-700 ${
+                  block.props.checked ? "line-through opacity-70" : ""
+                }`}
+              >
+                {block.content?.[0]?.text}
+              </span>
+            </div>
+          );
+
+        case "video":
+          return (
+            <div key={index} className="my-6">
+              <video
+                controls
+                className="w-full rounded"
+                src={block.props.url}
+              />
+              {block.props.caption && (
+                <p className="text-center text-sm text-gray-500 mt-2">
+                  {block.props.caption}
+                </p>
+              )}
+            </div>
+          );
+
         default:
           return null;
       }
@@ -143,14 +226,21 @@ export default function BlogPost() {
 
         <article className="max-w-4xl mx-auto px-4 py-8">
           {post.coverImage && (
-            <div className="w-full flex justify-center items-center mb-6">
-              <Image
-                src={post.coverImage}
-                alt="Post Cover"
-                width={1200}
-                height={630}
-                className="w-auto max-h-96 object-cover rounded"
-              />
+            <div className="w-full mb-6 px-4 sm:px-8">
+           
+              {/* Adds consistent padding */}
+              <div className="w-full max-w-[1920px] mx-auto">
+           
+                {/* Centered container */}
+                <Image
+                  src={post.coverImage}
+                  alt="Post Cover"
+                  width={1920}
+                  height={1080}
+                  className="w-full h-auto max-h-[70vh] object-cover rounded-lg"
+                  priority
+                />
+              </div>
             </div>
           )}
 
