@@ -12,7 +12,8 @@ interface BlogPost {
   cardColor: string;
   coverImage: string | null;
   category: string;
-  content: any[];
+  category2: string | null;
+  category3: string | null;
   createdAt: string;
   updatedAt: string;
 }
@@ -45,15 +46,26 @@ export default function HeroBlogPreview() {
     fetchPosts();
   }, []);
 
+  // Get all unique categories from all three category fields
+  const getAllCategories = () => {
+    const allCategories = posts.flatMap((post) =>
+      [post.category, post.category2, post.category3].filter(Boolean)
+    ); // Remove null/undefined values
+
+    return Array.from(new Set(allCategories)); // Remove duplicates
+  };
+
   const filteredPosts =
     selectedCategory === "All"
       ? posts
-      : posts.filter((post) => post.category === selectedCategory);
+      : posts.filter(
+          (post) =>
+            post.category === selectedCategory ||
+            post.category2 === selectedCategory ||
+            post.category3 === selectedCategory
+        );
 
-  const categories = [
-    "All",
-    ...Array.from(new Set(posts.map((post) => post.category))),
-  ];
+  const categories = ["All", ...getAllCategories()];
 
   if (loading) {
     return <div className="text-center py-8">Loading posts...</div>;
@@ -93,7 +105,11 @@ export default function HeroBlogPreview() {
                 id={post.id}
                 title={post.title}
                 author={post.author}
-                category={post.category}
+                categories={[
+                  post.category,
+                  post.category2,
+                  post.category3,
+                ].filter(Boolean)} // Pass all non-null categories
                 date={new Date(post.createdAt).toLocaleDateString()}
                 cardColor={post.cardColor}
               />

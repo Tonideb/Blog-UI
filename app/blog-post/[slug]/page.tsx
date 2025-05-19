@@ -33,6 +33,8 @@ interface BlogPost {
   cardColor: string;
   coverImage: string | null;
   category: string;
+  category2: string | null;
+  category3: string | null;
   createdAt: string;
   updatedAt: string;
 }
@@ -213,6 +215,24 @@ export default function BlogPost() {
     });
   };
 
+  const getAllCategories = (post: BlogPost) => {
+    return [post.category, post.category2, post.category3].filter(
+      Boolean
+    ) as string[];
+  };
+
+  if (!post) {
+    return (
+      <section className="py-10">
+        <div className="max-w-6xl mx-auto text-center py-20">
+          Post not found
+        </div>
+      </section>
+    );
+  }
+
+  const categories = getAllCategories(post);
+
   return (
     <section className="py-10">
       <div className="bg-white max-w-6xl mx-auto items-center border shadow-sm rounded-2xl py-6">
@@ -227,10 +247,8 @@ export default function BlogPost() {
         <article className="max-w-4xl mx-auto px-4 py-8">
           {post.coverImage && (
             <div className="w-full mb-6 px-4 sm:px-8">
-           
               {/* Adds consistent padding */}
               <div className="w-full max-w-[1920px] mx-auto">
-           
                 {/* Centered container */}
                 <Image
                   src={post.coverImage}
@@ -259,20 +277,19 @@ export default function BlogPost() {
                   </div>
 
                   <div className="text-start border-t border-black/40 py-4 w-full">
-                    <p className="text-gray-700 text-md font-thin px-1.5 rounded-full">
-                      {new Date(post.createdAt).toLocaleDateString("en-US", {
-                        year: "numeric",
-                        month: "long",
-                        day: "numeric",
-                      })}
-                    </p>
+                    <div className="flex flex-wrap gap-2">
+                      {categories.map((cat, index) => (
+                        <span
+                          key={index}
+                          className="bg-black/10 inline-block px-2 py-1 rounded text-md font-thin"
+                        >
+                          {cat}
+                        </span>
+                      ))}
+                    </div>
                   </div>
 
-                  <div className="text-start border-t border-black/40 py-4 w-full">
-                    <p className="bg-black/10 inline-block px-2 py-1 rounded text-md font-thin">
-                      {post.category}
-                    </p>
-                  </div>
+                
                 </div>
               </div>
 
