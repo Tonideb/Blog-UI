@@ -21,6 +21,7 @@ interface ContentBlock {
     level?: number;
     url?: string;
     caption?: string;
+    checked?: boolean;
   };
   content?: Array<{ text?: string }>;
 }
@@ -288,8 +289,6 @@ export default function BlogPost() {
                       ))}
                     </div>
                   </div>
-
-                
                 </div>
               </div>
 

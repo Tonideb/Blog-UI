@@ -33,7 +33,7 @@ export default function HeroBlogPreview() {
         if (!response.ok) {
           throw new Error("Failed to fetch posts");
         }
-        const data = await response.json();
+        const data: BlogPost[] = await response.json();
         const sortedData = data.sort((a, b) => a.id - b.id);
         setPosts(sortedData);
       } catch (err) {
@@ -65,7 +65,7 @@ export default function HeroBlogPreview() {
             post.category3 === selectedCategory
         );
 
-  const categories = ["All", ...getAllCategories()];
+  const categories: string[] = ["All", ...(getAllCategories() as string[])];
 
   if (loading) {
     return <div className="text-center py-8">Loading posts...</div>;
@@ -109,7 +109,7 @@ export default function HeroBlogPreview() {
                   post.category,
                   post.category2,
                   post.category3,
-                ].filter(Boolean)} // Pass all non-null categories
+                ].filter(Boolean) as string[]}
                 date={new Date(post.createdAt).toLocaleDateString()}
                 cardColor={post.cardColor}
               />
